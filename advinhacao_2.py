@@ -5,28 +5,45 @@ def jogar():
     print("Bem vindo no jogo de adivinhação 2")
     print("********************************")
 
-    palavra_secreta = "banana"
-    letras_acertadas = ["_","_","_","_","_","_"]
-    letras_erradas = []
+    ##Selecionando a palavra secreta
+    arquivo = open("palavras.txt","r")
+    palavras = []
+    for linha in arquivo:
+        palavras.append(linha.strip())
+    arquivo.close()
 
+    ##Variaveis iniciais
+    palavra_secreta = palavras[random.randrange(0,len(palavras))].upper()
+    letras_acertadas = ["_" for letra in palavra_secreta]
+    letras_erradas = []
     enforcou = False
     acertou = False
+    cont = 0
+    tentativas = 3
 
-    while(not enforcou and not acertou):
+    ##Jogo
+    while (not enforcou and not acertou and cont < tentativas):
+        print(f"Você ainda tem {tentativas - cont} de {tentativas} tentativas")
         chute = input("Qual letra?")
-        chute = chute.strip()
+        chute = chute.strip().upper()
 
-        index = 0
+        if (chute in palavra_secreta):
+            index = 0
+            for letra in palavra_secreta:
+                if (chute == letra):
+                    letras_acertadas[index] = letra
+                index = index + 1
+        else:
+            cont += 1
 
-        for letra in palavra_secreta:
-            if(chute.upper() == letra.upper()):
-                letras_acertadas[index] = letra
+        if ("_" not in letras_acertadas):
+            print("Fim do jogo, você ganhou!!")
+            break
 
-            index = index + 1
-        
         print(letras_acertadas)
 
-    print("Fim do jogo")
+    if (cont == tentativas):
+        print(f"Fim do jogo, você perdeu. A palavra secreta era {palavra_secreta.lower()}")
 
-if(__name__ == "__main__"):
+if (__name__ == "__main__"):
     jogar()
